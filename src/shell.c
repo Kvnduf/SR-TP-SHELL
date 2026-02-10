@@ -34,7 +34,7 @@ int main()
 		if (execute_builtin(l) <= 0) {
 			// Rien (pour le moment)
 		} else {
-			execute_command(l, 0);
+			execute_command_line(l, 0);
 		}
 
 	}
