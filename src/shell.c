@@ -13,6 +13,7 @@ int main()
 	while (1) {
 		struct cmdline *l;
 		int i, j;
+		pid_t pid = getpid();
 
 		printf("shell> ");
 		l = readcmd();
@@ -27,6 +28,10 @@ int main()
 			/* Syntax error, read another command */
 			printf("error: %s\n", l->err);
 			continue;
+		}
+
+		if (l->seq != NULL && !strcmp(l->seq[0][0], "quit")) {
+			Kill(pid, SIGTERM);
 		}
 
 		if (l->in) printf("in: %s\n", l->in);
