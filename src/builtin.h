@@ -7,10 +7,7 @@
  * @brief Fonction qui exécute une commande intégrée (builtin) si elle est reconnue.
  * 
  * @param cmd Un pointeur vers une structure cmdline contenant la commande à exécuter.
- * @return int 
- * - Retourne 0 si la commande a été reconnue et exécutée avec succès.
- * - Retourne 1 si la commande n'est pas reconnue comme une commande intégrée (builtin).
- * - Retourne -1 si la commande a été reconnue mais a échoué lors de son exécution.
+ * @return int la valeur de retour de la commande intégrée exécutée, ou -1 si la commande n'est pas reconnue comme un builtin.
  */
 int execute_builtin(struct cmdline *cmd);
 

@@ -31,7 +31,7 @@ int main()
 			continue;
 		}
 
-		if (execute_builtin(l) <= 0) {
+		if (execute_builtin(l) >= 0) {
 			// Rien (pour le moment)
 		} else {
 			execute_command_line(l, 0);

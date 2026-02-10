@@ -7,7 +7,7 @@
 
 int execute_builtin(struct cmdline *cmd) {
     if (cmd->seq == NULL || cmd->seq[0] == NULL || cmd->seq[0][0] == NULL) {
-        return 1; // Pas un builtin
+        return -1; // Pas un builtin
     }
 
     char *command = cmd->seq[0][0];
@@ -15,7 +15,8 @@ int execute_builtin(struct cmdline *cmd) {
     // commande quit
     if (strcmp(command, "quit") == 0) {
         Kill(getpid(), SIGTERM);
+        return 1; // renvoyer 1 pour indiquer une erreur si la terminaison du shell échoue
     }
 
-    return 1; // Pas un builtin
+    return -1; // Pas un builtin
 }
