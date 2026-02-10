@@ -39,6 +39,34 @@ int main()
 		pid_t pid_child;
 
 		pid_child = Fork();
+
+		int fd_in = STDIN_FILENO; // descripteur pour le fichier d'entrée
+		int fd_out = STDOUT_FILENO; // descripteur pour le fichier de sortie
+
+		// Cas cmd >
+		int i = 0;
+		while (l->seq[0][i] != NULL) {
+
+			// Cas >
+			if (!strcmp(l->seq[0][i],">")) {
+				fd_out = Open(l->seq[0][1+i],O_CREAT | O_WRONLY, 0644); // XXX = indice du XXX
+				dup2(fd_out, STDOUT_FILENO);
+			}
+			// Cas >>
+			if (!strcmp(l->seq[0][i],">>")) {
+				fd_out = Open(l->seq[0][1+i],O_CREAT | O_WRONLY | O_APPEND, 0644); // XXX = indice du XXX
+				dup2(fd_out, STDOUT_FILENO);
+			}
+
+			// Cas <
+			if (!strcmp(l->seq[0][i],"<")) {
+				fd_in = Open(l->seq[0][1+i],O_CREAT | O_RDONLY, 0644); // XXX = indice du XXX
+				dup2(fd_in, STDIN_FILENO);
+			}
+			i++;
+		}	
+
+
 		if (pid_child == 0) {
 			execvp(l->seq[0][0], l->seq[0]);
 			if (errno == ENOENT) {
