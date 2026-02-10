@@ -30,7 +30,7 @@ int main()
 			continue;
 		}
 
-		if (l->seq != NULL && !strcmp(l->seq[0][0], "quit")) {
+		if (l->seq != NULL && l->seq[0] != NULL && !strcmp(l->seq[0][0], "quit")) {
 			Kill(pid, SIGTERM);
 		}
 
@@ -41,7 +41,12 @@ int main()
 		pid_child = Fork();
 		if (pid_child == 0) {
 			execvp(l->seq[0][0], l->seq[0]);
-			exit(0);
+			if (errno == ENOENT) {
+				printf("%s: command not found\n", l->seq[0][0]);
+				exit(127);
+			}
+			perror("execvp");
+			exit(1);
 		}
 		waitpid(pid_child, NULL, 0);
 
