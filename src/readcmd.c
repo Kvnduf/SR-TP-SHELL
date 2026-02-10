@@ -10,7 +10,9 @@
 #include <string.h>
 #include "readcmd.h"
 
-
+/**
+ * @brief Déclenche une erreur de mémoire et quitte le programme
+ */
 static void memory_error(void)
 {
 	errno = ENOMEM;
@@ -18,7 +20,11 @@ static void memory_error(void)
 	exit(1);
 }
 
-
+/**
+ * @brief Alloue de la mémoire et gère les erreurs d'allocation
+ * @param size La taille de mémoire à allouer
+ * @return void* Un pointeur vers la mémoire allouée
+ */
 static void *xmalloc(size_t size)
 {
 	void *p = malloc(size);
@@ -26,7 +32,13 @@ static void *xmalloc(size_t size)
 	return p;
 }
 
-
+/**
+ * @brief Réalloue de la mémoire et gère les erreurs d'allocation
+ * 
+ * @param ptr Pointeur vers la mémoire à réallouer
+ * @param size Nouvelle taille de mémoire à allouer
+ * @return void* Un pointeur vers la mémoire réallouée
+ */
 static void *xrealloc(void *ptr, size_t size)
 {
 	void *p = realloc(ptr, size);
@@ -34,8 +46,10 @@ static void *xrealloc(void *ptr, size_t size)
 	return p;
 }
 
-
-/* Read a line from standard input and put it in a char[] */
+/**
+ * @brief Lit une ligne de l'entrée standard et gère les erreurs d'entrée/sortie
+ * @return char*  Un pointeur vers la ligne lue, ou NULL si l'entrée est fermée
+ */
 static char *readline(void)
 {
 	size_t buf_len = 16;
@@ -66,7 +80,13 @@ static char *readline(void)
 }
 
 
-/* Split the string in words, according to the simple shell grammar. */
+/**
+ * @brief Divise une ligne en mots, en gérant les espaces, les tabulations et les caractères spéciaux (<, >, |)
+ * 
+ * @param line La ligne à diviser
+ * @return char** Un tableau de chaînes de caractères représentant les mots de la ligne, terminé par un pointeur NULL
+ * Exemple : pour la ligne "ls -l | grep a > output.txt", le tableau retourné serait ["ls", "-l", "|", "grep", "a", ">", "output.txt", NULL]
+ */
 static char **split_in_words(char *line)
 {
 	char *cur = line;
@@ -126,7 +146,11 @@ static char **split_in_words(char *line)
 	return tab;
 }
 
-
+/**
+ * @brief Libère la mémoire allouée pour une séquence de commandes
+ * 
+ * @param seq La séquence de commandes à libérer
+ */
 static void freeseq(char ***seq)
 {
 	int i, j;
@@ -140,8 +164,11 @@ static void freeseq(char ***seq)
 	free(seq);
 }
 
-
-/* Free the fields of the structure but not the structure itself */
+/**
+ * @brief Libère la mémoire allouée pour une structure cmdline, sans libérer la structure elle-même
+ * 
+ * @param s La structure cmdline à libérer
+ */
 static void freecmd(struct cmdline *s)
 {
 	if (s->in) free(s->in);
@@ -149,7 +176,10 @@ static void freecmd(struct cmdline *s)
 	if (s->seq) freeseq(s->seq);
 }
 
-
+/**
+ * @brief Lit une ligne de commande à partir de l'entrée standard et l'analyse en une structure cmdline
+ * @return struct cmdline* 
+ */
 struct cmdline *readcmd(void)
 {
 	static struct cmdline *static_cmdline = 0;

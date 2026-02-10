@@ -5,8 +5,10 @@
 #ifndef __READCMD_H
 #define __READCMD_H
 
-/* Read a command line from input stream. Return null when input closed.
-Display an error and call exit() in case of memory exhaustion. */
+/**
+ * @brief Lit une ligne de commande à partir de l'entrée standard et la analyse en une structure cmdline
+ * @return struct cmdline* 
+ */
 struct cmdline *readcmd(void);
 
 
