@@ -36,14 +36,14 @@ int main()
 
 
 		// Gestion d'une commande simple sans redirection ni pipe
-		pid_t pid;
+		pid_t pid_child;
 
-		pid = Fork();
-		if (pid == 0) {
+		pid_child = Fork();
+		if (pid_child == 0) {
 			execvp(l->seq[0][0], l->seq[0]);
 			exit(0);
 		}
-		waitpid(pid, NULL, 0);
+		waitpid(pid_child, NULL, 0);
 
 		if (l->in) printf("in: %s\n", l->in);
 		if (l->out) printf("out: %s\n", l->out);
