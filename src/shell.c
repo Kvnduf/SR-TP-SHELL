@@ -34,6 +34,17 @@ int main()
 			Kill(pid, SIGTERM);
 		}
 
+
+		// Gestion d'une commande simple sans redirection ni pipe
+		pid_t pid;
+
+		pid = Fork();
+		if (pid == 0) {
+			execvp(l->seq[0][0], l->seq[0]);
+			exit(0);
+		}
+		waitpid(pid, NULL, 0);
+
 		if (l->in) printf("in: %s\n", l->in);
 		if (l->out) printf("out: %s\n", l->out);
 
