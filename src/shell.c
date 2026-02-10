@@ -6,6 +6,7 @@
 #include <stdlib.h>
 #include "readcmd.h"
 #include "csapp.h"
+#include "builtin.h"
 
 
 int main()
@@ -13,7 +14,7 @@ int main()
 	while (1) {
 		struct cmdline *l;
 		int i, j;
-		pid_t pid = getpid();
+		// pid_t pid = getpid();
 
 		printf("shell> ");
 		l = readcmd();
@@ -30,8 +31,8 @@ int main()
 			continue;
 		}
 
-		if (l->seq != NULL && l->seq[0] != NULL && !strcmp(l->seq[0][0], "quit")) {
-			Kill(pid, SIGTERM);
+		if (execute_builtin(l) <= 0) {
+			continue;
 		}
 
 
@@ -44,7 +45,7 @@ int main()
 		int fd_out = STDOUT_FILENO; // descripteur pour le fichier de sortie
 
 		// Cas cmd >
-		int i = 0;
+		i = 0;
 		while (l->seq[0][i] != NULL) {
 
 			// Cas >

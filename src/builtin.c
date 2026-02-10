@@ -1,0 +1,21 @@
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+#include "builtin.h"
+#include "readcmd.h"
+#include "csapp.h"
+
+int execute_builtin(struct cmdline *cmd) {
+    if (cmd->seq == NULL || cmd->seq[0] == NULL || cmd->seq[0][0] == NULL) {
+        return 1; // Pas un builtin
+    }
+
+    char *command = cmd->seq[0][0];
+
+    // commande quit
+    if (strcmp(command, "quit") == 0) {
+        Kill(getpid(), SIGTERM);
+    }
+
+    return 1; // Pas un builtin
+}
