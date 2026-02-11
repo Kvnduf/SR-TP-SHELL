@@ -82,7 +82,13 @@ int execute_command_line(struct cmdline *l, int background) {
         }
     }
     if (l->out) {
-        fd_out = open(l->out, O_WRONLY | O_CREAT | O_TRUNC, 0644);
+        int flags = O_WRONLY | O_CREAT;
+        if (l->append) {
+            flags |= O_APPEND;  // Mode append (>>)
+        } else {
+            flags |= O_TRUNC;   // Mode truncate (>)
+        }
+        fd_out = open(l->out, flags, 0644);
         if (fd_out < 0) {
             perror(l->out);
             parent_cleanup(fd_in, fd_out, fd_err, background, child_pids, nb_cmds_executed, &status);

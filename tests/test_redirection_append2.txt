@@ -3,4 +3,4 @@
 #
 
 echo l'apnée de SR est vraiment trop chouette > ./tests/texts/output1.txt
-echo et très passionnant aussi .>> ./tests/texts/output1.txt
+echo et très passionnante aussi .>> ./tests/texts/output1.txt

@@ -15,7 +15,7 @@ struct cmdline *readcmd(void);
 /**
  * @brief Nombre de commandes simples dans une séquence de commandes
  * @param cmd Un pointeur vers une structure cmdline contenant la ligne de commande à analyser
- * @return int Le nombre de commandes simples dans la séquence de commandes, ou -1
+ * @return int Le nombre de commandes simples dans la séquence de commandes, ou -1 en cas d'erreur
  */
 int count_simple_commands(struct cmdline *cmd);
 
@@ -25,6 +25,7 @@ struct cmdline {
 			   displayed. The other fields are null. */
 	char *in;	/* If not null : name of file for input redirection. */
 	char *out;	/* If not null : name of file for output redirection. */
+	int append;	/* If out is not null, append is 1 if the redirection is >>, 0 if it is >. */
 	char ***seq;	/* See comment below */
 };
 
