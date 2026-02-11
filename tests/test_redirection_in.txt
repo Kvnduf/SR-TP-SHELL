@@ -1,0 +1,4 @@
+#
+# test_redirection_in.txt - Tester une redirection avec la commande cat qui donne en entrée le fichier input.txt (dans le dossier texts).
+#
+cat < ./tests/texts/input1.txt

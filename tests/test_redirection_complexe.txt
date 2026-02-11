@@ -1,0 +1,5 @@
+#
+# test_redirection_avec_pipe.txt - Ce test effectue plusieurs avec pipe et autres pour vérifier le fonctionnement des redirections sur un exemple plus complexe.
+#
+sort -R < ./tests/texts/random.txt 
+ls -l | grep m | wc -l 

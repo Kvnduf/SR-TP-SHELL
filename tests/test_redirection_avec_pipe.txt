@@ -1,0 +1,4 @@
+#
+# test_redirection_avec_pipe.txt - Ce test redirige la sortie standart du man ls vers l'entrée standart du tail.  
+#
+man ls | tail
