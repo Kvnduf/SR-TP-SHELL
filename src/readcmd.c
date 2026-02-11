@@ -307,3 +307,16 @@ error:
 	}
 	return s;
 }
+
+
+int count_simple_commands(struct cmdline *cmd) {
+	if (cmd == NULL || cmd->seq == NULL) {
+		return -1;
+	}
+
+	int count = 0;
+	while (cmd->seq[count] != NULL) {
+		count++;
+	}
+	return count;
+}

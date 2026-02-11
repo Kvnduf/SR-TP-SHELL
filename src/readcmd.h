@@ -12,6 +12,13 @@
 struct cmdline *readcmd(void);
 
 
+/**
+ * @brief Nombre de commandes simples dans une séquence de commandes
+ * @param cmd Un pointeur vers une structure cmdline contenant la ligne de commande à analyser
+ * @return int Le nombre de commandes simples dans la séquence de commandes, ou -1
+ */
+int count_simple_commands(struct cmdline *cmd);
+
 /* Structure returned by readcmd() */
 struct cmdline {
 	char *err;	/* If not null, it is an error message that should be
