@@ -13,7 +13,7 @@ int execute_builtin(struct cmdline *cmd) {
     char *command = cmd->seq[0][0];
 
     // commande quit
-    if (strcmp(command, "quit") == 0) {
+    if ((strcmp(command, "quit") == 0) || (strcmp(command, "q") == 0)) {
         Kill(getpid(), SIGTERM);
         return 1; // renvoyer 1 pour indiquer une erreur si la terminaison du shell échoue
     }
