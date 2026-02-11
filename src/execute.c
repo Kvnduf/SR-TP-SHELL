@@ -6,18 +6,14 @@
  * @param cmd_simple Un tableau de strings représentant la commande simple à exécuter 
  * @param fd_in Descripteur de fichier pour la redirection d'entrée
  * @param fd_out Descripteur de fichier pour la redirection de sortie
- * @param fd_err Descripteur de fichier pour la redirection d'erreur
  * @return void
  */
-void execute_simple_command(char** cmd_simple, int fd_in, int fd_out, int fd_err) {
+void execute_simple_command(char** cmd_simple, int fd_in, int fd_out) {
     if (fd_in != STDIN_FILENO) {
         dup2(fd_in, STDIN_FILENO);
     }
     if (fd_out != STDOUT_FILENO) {
         dup2(fd_out, STDOUT_FILENO);
-    }
-    if (fd_err != STDERR_FILENO) {
-        dup2(fd_err, STDERR_FILENO);
     }
     
     execvp(cmd_simple[0], cmd_simple);
@@ -43,11 +39,10 @@ int is_last_simple_command(struct cmdline *l, int i) {
 
 
 // Cleanup de la fonction execute_command_line
-void parent_cleanup(int fd_in, int fd_out, int fd_err, int background, pid_t* child_pids, int nb_cmds_executed, int* status) {
+void parent_cleanup(int fd_in, int fd_out, int background, pid_t* child_pids, int nb_cmds_executed, int* status) {
     // Fermer les descripteurs ouverts
     if (fd_in != STDIN_FILENO) Close(fd_in);
     if (fd_out != STDOUT_FILENO) Close(fd_out);
-    if (fd_err != STDERR_FILENO) Close(fd_err);
 
     if (background) return;
     // Attendre la fin de tous les processus enfants si la commande n'est pas en arrière-plan
@@ -66,7 +61,6 @@ int execute_command_line(struct cmdline *l, int background) {
     // Ouverture des fichiers pour les redirections
     int fd_in = STDIN_FILENO; // descripteur pour le fichier d'entrée
     int fd_out = STDOUT_FILENO; // descripteur pour le fichier de sortie
-    int fd_err = STDERR_FILENO; // descripteur pour le fichier d'erreur
 
     int curr_fd_in;
     int curr_fd_out;
@@ -77,7 +71,7 @@ int execute_command_line(struct cmdline *l, int background) {
         fd_in = open(l->in, O_RDONLY, 0644);
         if (fd_in < 0) {
             perror(l->in);
-            parent_cleanup(fd_in, fd_out, fd_err, background, child_pids, nb_cmds_executed, &status);
+            parent_cleanup(fd_in, fd_out, background, child_pids, nb_cmds_executed, &status);
             return 1;
         }
     }
@@ -91,15 +85,7 @@ int execute_command_line(struct cmdline *l, int background) {
         fd_out = open(l->out, flags, 0644);
         if (fd_out < 0) {
             perror(l->out);
-            parent_cleanup(fd_in, fd_out, fd_err, background, child_pids, nb_cmds_executed, &status);
-            return 1;
-        }
-    }
-    if (l->err) {
-        fd_err = open(l->err, O_WRONLY | O_CREAT | O_TRUNC, 0644);
-        if (fd_err < 0) {
-            perror(l->err);
-            parent_cleanup(fd_in, fd_out, fd_err, background, child_pids, nb_cmds_executed, &status);
+            parent_cleanup(fd_in, fd_out, background, child_pids, nb_cmds_executed, &status);
             return 1;
         }
     }
@@ -110,7 +96,7 @@ int execute_command_line(struct cmdline *l, int background) {
             curr_pipe = malloc(2 * sizeof(int));
             if (curr_pipe == NULL) {
                 perror("malloc");
-                parent_cleanup(fd_in, fd_out, fd_err, background, child_pids, nb_cmds_executed, &status);
+                parent_cleanup(fd_in, fd_out, background, child_pids, nb_cmds_executed, &status);
                 return -1;
             }
             if (pipe(curr_pipe) < 0) {
@@ -118,7 +104,7 @@ int execute_command_line(struct cmdline *l, int background) {
                 free(curr_pipe);
                 Close(previous_pipe[0]);
                 Close(previous_pipe[1]);
-                parent_cleanup(fd_in, fd_out, fd_err, background, child_pids, nb_cmds_executed, &status);
+                parent_cleanup(fd_in, fd_out, background, child_pids, nb_cmds_executed, &status);
                 return -1;
             }
         }
@@ -140,7 +126,7 @@ int execute_command_line(struct cmdline *l, int background) {
                 curr_fd_out = curr_pipe[1];
                 Close(curr_pipe[0]);
             }
-            execute_simple_command(l->seq[i], curr_fd_in, curr_fd_out, fd_err);
+            execute_simple_command(l->seq[i], curr_fd_in, curr_fd_out);
         }
         nb_cmds_executed++;
         if (previous_pipe) {
@@ -152,6 +138,6 @@ int execute_command_line(struct cmdline *l, int background) {
         curr_pipe = NULL;
     }
 
-    parent_cleanup(fd_in, fd_out, fd_err, background, child_pids, nb_cmds_executed, &status);
+    parent_cleanup(fd_in, fd_out, background, child_pids, nb_cmds_executed, &status);
     return status;
 }
