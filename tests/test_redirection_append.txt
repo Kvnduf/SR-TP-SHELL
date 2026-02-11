@@ -1,6 +1,0 @@
-#
-# test_redirection_append.txt - Ce test créer le fichier append.txt si inexistant et l'écrase sinon. Puis ajoute plusieurs redirections a la fin du fichier append.txt pour vétifier le bon fonctionnement de la redirection append.  
-#
-echo > ./tests/texts/append.txt
-echo a >> ./tests/texts/append.txt 
-echo b >> ./tests/texts/append.txt 

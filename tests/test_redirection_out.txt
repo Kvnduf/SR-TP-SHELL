@@ -1,6 +1,4 @@
 #
-# test_redirection_out.txt - Tester une redirection avec la commande echo pour mettre dans un ficher output.txt (dans le dossier texts) la sortie de la commande. Et dans un second temps effectue une redirection de l'entrée du deuxième echo a la fin de output.txt .
+# test_redirection_out.txt - Tester une redirection avec la commande echo pour mettre dans un ficher output2.txt (dans le dossier texts) la sortie de la commande.
 #
-
-echo l'apnée de SR est vraiment trop chouette > ./tests/texts/output.txt
-echo et très passionnant aussi .>> ./tests/texts/output.txt
+echo un deux trois quatre cinq > ./tests/texts/output2.txt

@@ -1,0 +1,6 @@
+#
+# test_redirection_append2.txt - Tester une redirection avec la commande echo pour mettre dans un ficher output1.txt (dans le dossier texts) la sortie de la commande. Et dans un second temps effectue une redirection de l'entrée du deuxième echo a la fin de output1.txt .
+#
+
+echo l'apnée de SR est vraiment trop chouette > ./tests/texts/output1.txt
+echo et très passionnant aussi .>> ./tests/texts/output1.txt
