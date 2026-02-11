@@ -115,6 +115,10 @@ static char **split_in_words(char *line)
 			w = "|";
 			cur++;
 			break;
+		case '&':
+			w = "&";
+			cur++;
+			break;
 		default:
 			/* Another word */
 			start = cur;
@@ -127,6 +131,7 @@ static char **split_in_words(char *line)
 				case '<':
 				case '>':
 				case '|':
+				case '&':
 					c = 0;
 					break;
 				default: ;
@@ -218,8 +223,9 @@ struct cmdline *readcmd(void)
 	s->err = 0;
 	s->in = 0;
 	s->out = 0;
-	s->append = 0;
+	s->out_append = 0;
 	s->seq = 0;
+	s->background = 0;
 
 	i = 0;
 	while ((w = words[i++]) != 0) {
@@ -244,7 +250,7 @@ struct cmdline *readcmd(void)
 			}
 			/* Regarde si le prochain mot est aussi ">" pour le mode append (>>) */
 			if (words[i] != 0 && words[i][0] == '>' && words[i][1] == '\0') {
-				s->append = 1;
+				s->out_append = 1;
 				i++; // Passe le mot ">" supplémentaire
 				if (words[i] == 0) {
 					s->err = "filename missing for output redirection";
@@ -252,7 +258,7 @@ struct cmdline *readcmd(void)
 				}
 				s->out = words[i++];
 			} else {
-				s->append = 0;
+				s->out_append = 0;
 				if (words[i] == 0) {
 					s->err = "filename missing for output redirection";
 					goto error;
@@ -274,6 +280,13 @@ struct cmdline *readcmd(void)
 			cmd = xmalloc(sizeof(char *));
 			cmd[0] = 0;
 			cmd_len = 0;
+			break;
+		case '&':
+			if (words[i] != 0) {
+				s->err = "& must be at the end of the command";
+				goto error;
+			}
+			s->background = 1;
 			break;
 		default:
 			cmd = xrealloc(cmd, (cmd_len + 2) * sizeof(char *));
@@ -301,6 +314,7 @@ error:
 		case '<':
 		case '>':
 		case '|':
+		case '&':
 			break;
 		default:
 			free(w);

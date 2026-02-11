@@ -1,5 +1,19 @@
 #include "execute.h"
-#include "readcmd.h"
+
+// Gestion des signaux
+
+// Handler pour SIGCHLD
+void sigchld_handler(int signum) {
+    while (waitpid(-1, NULL, WNOHANG) > 0);
+}
+
+
+// Fonction pour activer la gestion des signaux
+void setup_signal_handlers() {
+    Signal(SIGCHLD, sigchld_handler);
+}
+
+
 
 /**
  * @brief Exécute une commande simple avec redirection d'entrée/sortie. 
@@ -52,7 +66,7 @@ void parent_cleanup(int fd_in, int fd_out, int background, pid_t* child_pids, in
     free(child_pids);
 }
 
-int execute_command_line(struct cmdline *l, int background) {
+int execute_command_line(struct cmdline *l) {
     int status = 0;
     int simple_cmds_nb = count_simple_commands(l);
     pid_t* child_pids = malloc(simple_cmds_nb * sizeof(pid_t)); // tableau pour stocker les PID des processus enfants
@@ -71,13 +85,13 @@ int execute_command_line(struct cmdline *l, int background) {
         fd_in = open(l->in, O_RDONLY, 0644);
         if (fd_in < 0) {
             perror(l->in);
-            parent_cleanup(fd_in, fd_out, background, child_pids, nb_cmds_executed, &status);
+            parent_cleanup(fd_in, fd_out, l->background, child_pids, nb_cmds_executed, &status);
             return 1;
         }
     }
     if (l->out) {
         int flags = O_WRONLY | O_CREAT;
-        if (l->append) {
+        if (l->out_append) {
             flags |= O_APPEND;  // Mode append (>>)
         } else {
             flags |= O_TRUNC;   // Mode truncate (>)
@@ -85,7 +99,7 @@ int execute_command_line(struct cmdline *l, int background) {
         fd_out = open(l->out, flags, 0644);
         if (fd_out < 0) {
             perror(l->out);
-            parent_cleanup(fd_in, fd_out, background, child_pids, nb_cmds_executed, &status);
+            parent_cleanup(fd_in, fd_out, l->background, child_pids, nb_cmds_executed, &status);
             return 1;
         }
     }
@@ -96,7 +110,7 @@ int execute_command_line(struct cmdline *l, int background) {
             curr_pipe = malloc(2 * sizeof(int));
             if (curr_pipe == NULL) {
                 perror("malloc");
-                parent_cleanup(fd_in, fd_out, background, child_pids, nb_cmds_executed, &status);
+                parent_cleanup(fd_in, fd_out, l->background, child_pids, nb_cmds_executed, &status);
                 return -1;
             }
             if (pipe(curr_pipe) < 0) {
@@ -104,7 +118,7 @@ int execute_command_line(struct cmdline *l, int background) {
                 free(curr_pipe);
                 Close(previous_pipe[0]);
                 Close(previous_pipe[1]);
-                parent_cleanup(fd_in, fd_out, background, child_pids, nb_cmds_executed, &status);
+                parent_cleanup(fd_in, fd_out, l->background, child_pids, nb_cmds_executed, &status);
                 return -1;
             }
         }
@@ -138,6 +152,6 @@ int execute_command_line(struct cmdline *l, int background) {
         curr_pipe = NULL;
     }
 
-    parent_cleanup(fd_in, fd_out, background, child_pids, nb_cmds_executed, &status);
+    parent_cleanup(fd_in, fd_out, l->background, child_pids, nb_cmds_executed, &status);
     return status;
 }

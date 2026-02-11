@@ -25,8 +25,9 @@ struct cmdline {
 			   displayed. The other fields are null. */
 	char *in;	/* If not null : name of file for input redirection. */
 	char *out;	/* If not null : name of file for output redirection. */
-	int append;	/* If out is not null, append is 1 if the redirection is >>, 0 if it is >. */
+	int out_append;	/* If out is not null, out_append is 1 if the redirection is >>, 0 if it is >. */
 	char ***seq;	/* See comment below */
+	int background; /* 1 if the command line ends with &, 0 otherwise. */
 };
 
 /* Field seq of struct cmdline :
