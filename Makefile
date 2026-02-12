@@ -1,29 +1,40 @@
-.PHONY: all, clean
-
-# Disable implicit rules
-.SUFFIXES:
+.PHONY: all clean
 
 CC=gcc
-CFLAGS=-Wall -g
-VPATH=src/
+SCRDIR=src
+OBJDIR=obj
+INCLDIR=include
 
-# Note: -lnsl does not seem to work on Mac OS but will
-# probably be necessary on Solaris for linking network-related functions 
-#LIBS += -lsocket -lnsl -lrt
+EXEC=shell
+
+SRCS = $(wildcard $(SCRDIR)/*.c)
+OBJS = $(SRCS:$(SCRDIR)/%.c=$(OBJDIR)/%.o)
+
+CFLAGS=-Wall -g -I$(INCLDIR)
 LIBS+=-lpthread
 
-INCLUDE = readcmd.h csapp.h builtin.h execute.h
-OBJS = readcmd.o csapp.o builtin.o execute.o
-INCLDIR = -I.
 
-all: shell
+ifdef debug
+$(shell touch $(SRCS))
+CPPFLAGS=-DNDEBUG
+endif
 
-%.o: %.c $(INCLUDE)
-	$(CC) $(CFLAGS) $(INCLDIR) -c -o $@ $<
+$(shell mkdir -p $(OBJDIR))
 
-%: %.o $(OBJS)
+all: $(EXEC)
+
+$(OBJDIR)/%.o: $(SCRDIR)/%.c
+	$(CC) $(CPPFLAGS) $(CFLAGS) -c -o $@ $<
+
+$(OBJDIR)/csapp.o: $(SCRDIR)/csapp.c $(INCLDIR)/csapp.h
+$(OBJDIR)/builtin.o: $(SCRDIR)/builtin.c $(INCLDIR)/builtin.h $(INCLDIR)/readcmd.h $(INCLDIR)/csapp.h
+$(OBJDIR)/execute.o: $(SCRDIR)/execute.c $(INCLDIR)/execute.h $(INCLDIR)/readcmd.h $(INCLDIR)/csapp.h
+$(OBJDIR)/readcmd.o: $(SCRDIR)/readcmd.c $(INCLDIR)/readcmd.h
+$(OBJDIR)/shell.o: $(SCRDIR)/shell.c $(INCLDIR)/builtin.h $(INCLDIR)/execute.h
+
+$(EXEC): $(OBJS)
 	$(CC) -o $@ $(LDFLAGS) $^ $(LIBS)
 
 clean:
-	rm -f shell *.o
+	rm -f $(EXEC) $(OBJS)
 

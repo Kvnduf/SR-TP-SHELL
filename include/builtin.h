@@ -2,6 +2,7 @@
 #define BUILTIN_H
 
 #include "readcmd.h"
+#include "csapp.h" 
 
 /**
  * @brief Fonction qui exécute une commande intégrée (builtin) si elle est reconnue.
