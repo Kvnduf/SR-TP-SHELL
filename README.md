@@ -45,4 +45,3 @@ Une suite de tests a été mise en place pour valider le bon fonctionnement du s
 **Tests de robustesse**
 - `test_redirection_complexe.txt` : Combinaison de plusieurs redirections et pipes.
 
-
