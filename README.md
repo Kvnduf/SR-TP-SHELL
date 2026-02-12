@@ -37,7 +37,7 @@ Une suite de tests a été mise en place pour valider le bon fonctionnement du s
 - `test_redirection_in.txt` : Redirection d'entrée `<`
 - `test_redirection_out.txt` : Redirection de sortie `>`
 - `test_redirection_append1.txt`/`test_redirection_append2.txt` : Création et ajout successif avec `>>`
--  
+
 
 **Tests commandes pipe :**
 - `test_redirection_avec_pipe.txt` : Combinaison de pipes `|`.
@@ -45,3 +45,10 @@ Une suite de tests a été mise en place pour valider le bon fonctionnement du s
 **Tests de robustesse**
 - `test_redirection_complexe.txt` : Combinaison de plusieurs redirections et pipes.
 
+
+**Tests commandes en arrière-plan**
+...
+
+
+**Tests d'erreurs**
+...
