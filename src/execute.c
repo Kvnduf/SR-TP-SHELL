@@ -153,6 +153,9 @@ int execute_command_line(struct cmdline *l) {
 
         child_pids[i] = Fork();
         if (child_pids[i] == 0) {
+            #ifdef DEBUG
+            DEBUG_PRINT("Child process %d created for command %d\n", getpid(), i); 
+            #endif
             // Entrée
             if (i == 0) { // première commande simple => redirection d'entrée
                 curr_fd_in = fd_in;
