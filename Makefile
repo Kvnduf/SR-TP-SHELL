@@ -16,7 +16,7 @@ LIBS+=-lpthread
 
 ifdef debug
 $(shell touch $(SRCS))
-CPPFLAGS=-DNDEBUG
+CPPFLAGS=-DDEBUG
 endif
 
 $(shell mkdir -p $(OBJDIR))

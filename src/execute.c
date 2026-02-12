@@ -1,5 +1,9 @@
 #include "execute.h"
 
+#ifdef DEBUG
+#define DEBUG_PRINT(...) printf("[DEBUG] : ") ;printf(__VA_ARGS__); 
+#endif
+
 // Gestion des signaux
 
 // Handler pour SIGCHLD
@@ -23,11 +27,17 @@ void setup_signal_handlers() {
  * @return void
  */
 void execute_simple_command(char** cmd_simple, int fd_in, int fd_out) {
+    #ifdef DEBUG
+    DEBUG_PRINT("Executing simple command: %s, pid : %d, fd_in : %d, fd_out : %d\n", cmd_simple[0], getpid(), fd_in, fd_out); 
+    #endif
+
     if (fd_in != STDIN_FILENO) {
         dup2(fd_in, STDIN_FILENO);
+        close(fd_in);
     }
     if (fd_out != STDOUT_FILENO) {
         dup2(fd_out, STDOUT_FILENO);
+        close(fd_out);
     }
     
     execvp(cmd_simple[0], cmd_simple);
@@ -57,11 +67,17 @@ void parent_cleanup(int fd_in, int fd_out, int background, pid_t* child_pids, in
     // Fermer les descripteurs ouverts
     if (fd_in != STDIN_FILENO) Close(fd_in);
     if (fd_out != STDOUT_FILENO) Close(fd_out);
-
-    if (background) return;
-    // Attendre la fin de tous les processus enfants si la commande n'est pas en arrière-plan
-    for (int i = 0; i < nb_cmds_executed; i++) {
-        waitpid(child_pids[i], status, 0);
+    
+    if (!background) {
+        for (int i = 0; i < nb_cmds_executed; i++) {
+            #ifdef DEBUG
+            DEBUG_PRINT("Parent waiting PID %d\n", child_pids[i]); 
+            #endif
+            waitpid(child_pids[i], status, 0);
+            #ifdef DEBUG
+            DEBUG_PRINT("Child PID %d finished with status %d\n", child_pids[i], *status); 
+            #endif
+        }
     }
     free(child_pids);
 }
@@ -86,6 +102,15 @@ int execute_command_line(struct cmdline *l) {
         if (fd_in < 0) {
             perror(l->in);
             parent_cleanup(fd_in, fd_out, l->background, child_pids, nb_cmds_executed, &status);
+            return 1;
+        }
+    } 
+    // Sinon si c'est en background sans redirection explicite utiliser /dev/null
+    else if (l->background) {
+        fd_in = open("/dev/null", O_RDONLY);
+        if (fd_in < 0) {
+            perror("/dev/null");
+            free(child_pids);
             return 1;
         }
     }
@@ -121,6 +146,9 @@ int execute_command_line(struct cmdline *l) {
                 parent_cleanup(fd_in, fd_out, l->background, child_pids, nb_cmds_executed, &status);
                 return -1;
             }
+            #ifdef DEBUG
+            DEBUG_PRINT("Created pipe, command %d: read : %d, write : %d\n", i, curr_pipe[0], curr_pipe[1]); 
+            #endif
         }
 
         child_pids[i] = Fork();

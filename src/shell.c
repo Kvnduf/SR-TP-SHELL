@@ -7,9 +7,17 @@
 #include "builtin.h"
 #include "execute.h"
 
+#ifdef DEBUG
+#define DEBUG_PRINT(...) printf("[DEBUG] : ") ;printf(__VA_ARGS__); 
+#endif
+
 
 int main()
 {
+	#ifdef DEBUG
+	DEBUG_PRINT("Starting shell with parent PID %d\n", getpid()); 
+	#endif
+
 	int status;
 	setup_signal_handlers();
 	while (1) {
