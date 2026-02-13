@@ -1,0 +1,5 @@
+#
+# test_arrière_plan.txt - Tester les commandes en arrière-plan en utilisant sleep pour en vérifier le bon fonctionnement si 
+#
+sleep(100) &
+ps

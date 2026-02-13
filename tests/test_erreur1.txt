@@ -1,0 +1,4 @@
+#
+# test_erreur1.txt - Teste une commande avec deux pipes d'affilés ce qui a pour effet de seulement éxecutés la première commande sans le pipe.
+#
+man ls || tail

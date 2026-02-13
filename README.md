@@ -47,8 +47,8 @@ Une suite de tests a été mise en place pour valider le bon fonctionnement du s
 
 
 **Tests commandes en arrière-plan**
-...
+- `test_arrière_plan.txt` : éxecution d'une commande avec un processus en arrière-plan.
 
 
 **Tests d'erreurs**
-...
+- `test_erreur1.txt` : execution d'une commande avec deux pipes d'affilés.
