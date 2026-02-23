@@ -20,7 +20,16 @@ L'implémentation d'un shell UNIX minimaliste en langage C. Les fonctionnalités
 **Commandes intégrées (builtins)**
 - `quit` / `q` : terminaison propre du shell
 - `jobs` : affichage des processus en cours d'exécution (foreground et background)
-
+- `fg` : bascule un job en foreground
+- `bg` : bascule un job en background
+- `stop` : suspend un job en cours d'exécution
+- `wait` : attend la fin de tous les jobs en cours d'exécution
+  
+**Gestion des signaux**
+- `SIGINT` (Ctrl+C) : interruption du processus en cours d'exécution au premier plan
+- `SIGTSTP` (Ctrl+Z) : suspension du processus en cours d'exécution au premier plan
+- `SIGCHLD` : gestion des processus enfants terminés ou suspendus pour éviter les processus zombies
+  
 **Architecture modulaire**
 - Séparation du code en modules :
   - `builtin` : gestion des commandes intégrées
@@ -62,4 +71,9 @@ Une suite de tests a été mise en place pour valider le bon fonctionnement du s
 - `tests/test_jobs_done.txt` : Vérifie que le processus terminé sont correctement affichés et retirés de la table des jobs.
 - `tests/test_jobs_multiple_bg.txt` : Vérifie que plusieurs processus en arrière-plan sont correctement gérés et affichés.
 - `tests/test_jobs_stopped_interrupted.txt` : Vérifie que les processus stoppés et interrompus sont correctement affichés/gérés dans la table des jobs.
-- `tests/test_jobs_empty.txt` : Vérifie que la commande `jobs` n'affiche aucun job lorsque la table des jobs est vide. 
+- `tests/test_jobs_empty.txt` : Vérifie que la commande `jobs` n'affiche aucun job lorsque la table des jobs est vide.
+
+**Tests de commandes intégrées**
+- `tests/test_fg.txt` : Vérifie que la commande `fg` bascule correctement un job en foreground.
+- `tests/test_stop_bg.txt` : Vérifie que le processus lancé en arrière-plan peut être correctement stoppé avec la commande `stop` et relancé avec `bg`.
+- `tests/test_wait.txt` : Vérifie que la commande `wait` attend correctement la fin de tous les jobs en cours d'exécution.

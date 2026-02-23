@@ -132,6 +132,11 @@ int set_job_state_by_pgid(pid_t pgid, job_state_t state);
 void list_jobs();
 
 /**
+ * @brief Retourne 1 s'il existe au moins un job en état JOB_RUNNING ou JOB_STOPPED 0 sinon.
+ */
+int has_running_jobs(void);
+
+/**
  * @brief Retourne une chaîne de caractères représentant l'état du job.
  * 
  * @param state L'état du job à convertir en chaîne

@@ -1,0 +1,9 @@
+#
+# test_wait.txt - Tester la commande intégrée wait
+# Lance sleep 1 en bg puis attend sa fin avec 'wait'.
+# Après wait, jobs doit être vide.
+#
+sleep 1 &
+wait
+jobs
+quit

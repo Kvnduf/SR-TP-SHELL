@@ -14,7 +14,7 @@ CFLAGS=-Wall -g -I$(INCLDIR)
 LIBS+=-lpthread
 
 
-ifdef debug
+ifdef DEBUG
 $(shell touch $(SRCS))
 CPPFLAGS=-DDEBUG
 endif

@@ -165,3 +165,12 @@ void list_jobs(void) {
         }
     }
 }
+
+int has_running_jobs(void) {
+    for (int i = 0; i < MAXJOBS; i++) {
+        if (job_table[i].jid != 0 &&
+            (job_table[i].state == JOB_RUNNING || job_table[i].state == JOB_STOPPED))
+            return 1;
+    }
+    return 0;
+}

@@ -22,5 +22,12 @@ void setup_signals_handlers_shell();
  */
 int execute_command_line(struct cmdline *l);
 
+/**
+ * @brief Attend que le job de premier plan (pgid) disparaisse du foreground.
+ *
+ * @param pgid Le pgid du groupe de processus du job de premier plan
+ */
+void wait_for_fg_job(pid_t pgid);
+
 
 #endif

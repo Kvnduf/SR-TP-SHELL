@@ -173,37 +173,34 @@ void parent_cleanup(int fd_in, int fd_out, int background, pid_t* child_pids, in
     if (fd_out != STDOUT_FILENO) Close(fd_out);
 
     if (!background) {
-        // Donner le contrôle du terminal au groupe de processus enfant
-        if (pgid > 0 && isatty(STDIN_FILENO)) {
-            if (tcsetpgrp(STDIN_FILENO, pgid) < 0) {
-                if (errno != ESRCH && errno != EPERM) {
-                    perror("tcsetpgrp to child");
-                }
-            }
-        }
-
-        // On masque SIGCHLD pendant la manipulation de la table de jobs
-        sigset_t old_mask;
-        jobs_block_sigchld(&old_mask);
-
-        while (get_fg_job() != NULL) { // Tant qu'il y a un job au foreground
-            #ifdef DEBUG
-            DEBUG_PRINT("Shell sleeping, waiting for fg job (pgid %d)\n", (int)pgid);
-            #endif
-            Sigsuspend(&old_mask);
-        }
-
-        // Rétablir le masque de signaux
-        jobs_unblock_sigchld(&old_mask);
-
-        // Reprendre le contrôle du terminal
-        if (isatty(STDIN_FILENO)) {
-            if (tcsetpgrp(STDIN_FILENO, getpgrp()) < 0) {
-                perror("tcsetpgrp to shell");
-            }
-        }
+        // Attendre la fin du job de premier plan (terminal + sigsuspend + retour terminal)
+        wait_for_fg_job(pgid);
     }
     free(child_pids);
+}
+
+void wait_for_fg_job(pid_t pgid) {
+    
+    if (pgid > 0 && isatty(STDIN_FILENO)) {
+        if (tcsetpgrp(STDIN_FILENO, pgid) < 0) {
+            if (errno != ESRCH && errno != EPERM)
+                perror("tcsetpgrp to child (wait_for_fg_job)");
+        }
+    }
+
+    // Attendre que le job de premier plan disparaisse du foreground
+    sigset_t old_mask;
+    jobs_block_sigchld(&old_mask);
+    while (get_fg_job() != NULL) {
+        Sigsuspend(&old_mask);
+    }
+    jobs_unblock_sigchld(&old_mask);
+
+    // Rendre le terminal au shell car le job de premier plan a disparu du foreground
+    if (isatty(STDIN_FILENO)) {
+        if (tcsetpgrp(STDIN_FILENO, getpgrp()) < 0)
+            perror("tcsetpgrp to shell (wait_for_fg_job)");
+    }
 }
 
 int execute_command_line(struct cmdline *l) {

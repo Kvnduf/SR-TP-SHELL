@@ -1,0 +1,13 @@
+#
+# test_stop_bg.txt - Tester les commandes intégrées stop et bg
+#
+sleep 100 &
+SLEEP 1
+jobs
+stop %1
+SLEEP 1
+jobs
+bg %1
+SLEEP 1
+jobs
+quit
