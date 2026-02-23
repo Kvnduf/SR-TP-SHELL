@@ -1,0 +1,7 @@
+#
+# test_jobs_done.txt - Vérifier que les jobs terminés sont retirés de la table avec l'état "Done" dès que la processus est terminé
+#
+sleep 1 &
+SLEEP 2
+jobs
+quit

@@ -27,8 +27,9 @@ $(OBJDIR)/%.o: $(SCRDIR)/%.c
 	$(CC) $(CPPFLAGS) $(CFLAGS) -c -o $@ $<
 
 $(OBJDIR)/csapp.o: $(SCRDIR)/csapp.c $(INCLDIR)/csapp.h
-$(OBJDIR)/builtin.o: $(SCRDIR)/builtin.c $(INCLDIR)/builtin.h $(INCLDIR)/readcmd.h $(INCLDIR)/csapp.h
-$(OBJDIR)/execute.o: $(SCRDIR)/execute.c $(INCLDIR)/execute.h $(INCLDIR)/readcmd.h $(INCLDIR)/csapp.h
+$(OBJDIR)/jobs.o: $(SCRDIR)/jobs.c $(INCLDIR)/jobs.h
+$(OBJDIR)/builtin.o: $(SCRDIR)/builtin.c $(INCLDIR)/builtin.h $(INCLDIR)/jobs.h $(INCLDIR)/readcmd.h $(INCLDIR)/csapp.h
+$(OBJDIR)/execute.o: $(SCRDIR)/execute.c $(INCLDIR)/execute.h $(INCLDIR)/jobs.h $(INCLDIR)/readcmd.h $(INCLDIR)/csapp.h
 $(OBJDIR)/readcmd.o: $(SCRDIR)/readcmd.c $(INCLDIR)/readcmd.h
 $(OBJDIR)/shell.o: $(SCRDIR)/shell.c $(INCLDIR)/builtin.h $(INCLDIR)/execute.h
 

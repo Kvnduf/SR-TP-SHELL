@@ -8,10 +8,10 @@
 
 
 /**
- * @brief Intialise les gestionnaires de signaux pour le shell
+ * @brief Initialiser le comportement du shell vis-à-vis des signaux et du contrôle du terminal
  * 
  */
-void setup_signal_handlers();
+void setup_signals_handlers_shell();
 
 
 /**

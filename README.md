@@ -19,13 +19,15 @@ L'implémentation d'un shell UNIX minimaliste en langage C. Les fonctionnalités
 
 **Commandes intégrées (builtins)**
 - `quit` / `q` : terminaison propre du shell
+- `jobs` : affichage des processus en cours d'exécution (foreground et background)
 
 **Architecture modulaire**
 - Séparation du code en modules :
   - `builtin` : gestion des commandes intégrées
   - `execute` : exécution des commandes et gestion des processus
   - `readcmd` : analyse syntaxique de la ligne de commande (fourni par le sujet et adapté pour l'execution en arrière-plan)
-  - `shell` : boucle principale du shell (processus père : lecture, analyse et creation de processus fils pour l'exécution)
+  - `shell` : boucle principale du shell (processus père : lecture, analyse et creation de processus fils pour l'exécution)7
+  - `jobs` : gestion des processus en arrière-plan (table des jobs, états, etc.)
 
 
 ### Description des tests effectués
@@ -52,3 +54,12 @@ Une suite de tests a été mise en place pour valider le bon fonctionnement du s
 
 **Tests d'erreurs**
 - `test_erreur1.txt` : execution d'une commande avec deux pipes d'affilés.
+
+
+**Tests sur la gestion des jobs (et signaux)**
+
+- `tests/test_jobs_one_bg.txt` : Vérifie que la commande `jobs` affiche correctement un processus en arrière-plan.
+- `tests/test_jobs_done.txt` : Vérifie que le processus terminé sont correctement affichés et retirés de la table des jobs.
+- `tests/test_jobs_multiple_bg.txt` : Vérifie que plusieurs processus en arrière-plan sont correctement gérés et affichés.
+- `tests/test_jobs_stopped_interrupted.txt` : Vérifie que les processus stoppés et interrompus sont correctement affichés/gérés dans la table des jobs.
+- `tests/test_jobs_empty.txt` : Vérifie que la commande `jobs` n'affiche aucun job lorsque la table des jobs est vide. 

@@ -1,0 +1,11 @@
+#
+# test_jobs_stopped_interrupted.txt - Vérifier que 'jobs' affiche les jobs stoppés et n'affiche pas les jobs interrompus.
+#
+sleep 100
+SLEEP 1
+TSTP
+sleep 200
+SLEEP 1
+INT
+jobs
+quit

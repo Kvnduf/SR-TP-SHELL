@@ -1,0 +1,7 @@
+#
+# test_jobs_one_bg.txt - Vérifier que 'jobs' affiche un job unique en arrière-plan
+#
+#
+sleep 100 &
+jobs
+quit

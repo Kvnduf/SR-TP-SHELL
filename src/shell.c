@@ -19,17 +19,17 @@ int main()
 	#endif
 
 	int status;
-	setup_signal_handlers();
+	setup_signals_handlers_shell();
 	while (1) {
 		struct cmdline *l;
 
 		// Affichage du prompt
 		printf("shell> ");
+		fflush(stdout); // On doit s'assurer que le prompt est affiché avant de lire la commande
 
 		// Lecture de la ligne de commande
 		l = readcmd();
 
-		/* If input stream closed, normal termination */
 		if (!l) {
 			printf("exit\n");
 			exit(0);

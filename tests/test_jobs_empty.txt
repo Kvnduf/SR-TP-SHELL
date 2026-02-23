@@ -1,0 +1,6 @@
+#
+# test_jobs_empty.txt - Vérifier que 'jobs' ne liste rien quand aucun job n'a été lancé
+#
+#
+jobs
+quit
