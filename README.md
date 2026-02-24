@@ -47,7 +47,7 @@ L'implémentation d'un shell UNIX minimaliste en langage C. Les fonctionnalités
   - `builtin` : gestion des commandes intégrées
   - `execute` : exécution des commandes et gestion des processus
   - `readcmd` : analyse syntaxique de la ligne de commande (fourni par le sujet et adapté pour l'execution en arrière-plan)
-  - `shell` : boucle principale du shell (processus père : lecture, analyse et creation de processus fils pour l'exécution)7
+  - `shell` : boucle principale du shell (processus père : lecture, analyse et creation de processus fils pour l'exécution)
   - `jobs` : gestion des processus en arrière-plan (table des jobs, états, etc.)
 
 
