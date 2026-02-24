@@ -249,11 +249,8 @@ int execute_command_line(struct cmdline *l) {
 
     /*
      * En mode non interactif (sdriver.pl),
-     * rediriger aussi le stdout des jobs background vers /dev/null si aucune
+     * rediriger le stdout des jobs background vers /dev/null si aucune
      * redirection explicite n'est spécifiée.
-     * Raison : le processus background hériterait sinon du write-end du pipe
-     * stdout du shell, empêchant l'EOF côté lecteur (sdriver) même après la
-     * mort du shell.
      */
     if (l->background && !l->out && !isatty(STDOUT_FILENO)) {
         fd_out = open("/dev/null", O_WRONLY);
@@ -266,9 +263,9 @@ int execute_command_line(struct cmdline *l) {
     if (l->out) {
         int flags = O_WRONLY | O_CREAT;
         if (l->out_append) {
-            flags |= O_APPEND;  // Mode append (>>)
+            flags |= O_APPEND; // Mode append (>>)
         } else {
-            flags |= O_TRUNC;   // Mode truncate (>)
+            flags |= O_TRUNC; // Mode truncate (>)
         }
         fd_out = open(l->out, flags, 0644);
         if (fd_out < 0) {
