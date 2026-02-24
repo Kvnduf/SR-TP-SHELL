@@ -1,5 +1,17 @@
 # SR-TP-SHELL
 
+## Compilation du projet
+
+Le projet se compile avec la commande `make` à la racine du projet, pour générer l'exécutable `shell`. Pour avoir des messages de debug supplémentaires pendant l'exécution, on peut compiler avec `make DEBUG=1`.
+
+## Structure du projet
+
+- `src/` : contient les fichiers sources du projet
+- `include/` : contient les fichiers d'en-tête (headers)
+- `obj/` : contient les fichiers objets générés lors de la compilation
+- `tests/` : contient les tests unitaires pour valider les fonctionnalités du shell
+- `Makefile` : compilation du projet
+
 ## Compte-rendu
 
 ### Principales réalisations
