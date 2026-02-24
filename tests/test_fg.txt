@@ -1,7 +1,5 @@
 #
-# test_fg.txt - Tester la commande intégrée fg
-# Lance sleep 100 en bg, met-le en fg via 'fg %1',
-# puis envoie TSTP pour le suspendre depuis le fg, vérifie jobs.
+# test_fg.txt - Tester la commande fg 
 #
 sleep 100 &
 SLEEP 1

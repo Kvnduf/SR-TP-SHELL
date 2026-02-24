@@ -20,9 +20,9 @@ L'implémentation d'un shell UNIX minimaliste en langage C. Les fonctionnalités
 **Commandes intégrées (builtins)**
 - `quit` / `q` : terminaison propre du shell
 - `jobs` : affichage des processus en cours d'exécution (foreground et background)
-- `fg` : bascule un job en foreground
-- `bg` : bascule un job en background
-- `stop` : suspend un job en cours d'exécution
+- `fg <job_id/pid>` : bascule un job en foreground en fonction de son job ID ou de son PID
+- `bg <job_id/pid>` : bascule un job en background en fonction de son job ID ou de son PID
+- `stop <job_id/pid>` : suspend un job en cours d'exécution en fonction de son job ID ou de son PID
 - `wait` : attend la fin de tous les jobs en cours d'exécution
   
 **Gestion des signaux**

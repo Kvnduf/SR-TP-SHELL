@@ -1,11 +1,6 @@
 #
 # test_jobs_multiple_bg.txt - Vérifier que 'jobs' liste plusieurs jobs en arrière-plan
 #
-# Comportement attendu :
-#   [1] <pid1>  Running    sleep 100 &
-#   [2] <pid2>  Running    sleep 200 &
-#   [3] <pid3>  Running    sleep 300 &
-#
 sleep 100 &
 sleep 200 &
 sleep 300 &
